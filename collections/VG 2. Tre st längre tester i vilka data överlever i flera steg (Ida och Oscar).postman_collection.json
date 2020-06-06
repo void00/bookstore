@@ -1,0 +1,735 @@
+{
+	"info": {
+		"_postman_id": "80fb8836-48b7-4076-a165-cb4f2b1796c5",
+		"name": "VG 2. Tre st längre tester i vilka data överlever i flera steg (Ida och Oscar)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add writer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9599fbd4-2bf1-4ae0-afda-3eefb9fc0eb3",
+						"exec": [
+							"let response = pm.response.json();\r",
+							"let lastID = response.lastID;\r",
+							"\r",
+							"pm.environment.set('lastID', JSON.stringify(lastID));\r",
+							"pm.environment.set('name', 'Catherine Brooks');\r",
+							"pm.environment.set('description','A lovely woman living in Great Britain. Lives her life right and enjoys every minute.');\r",
+							"\r",
+							"pm.test('Affected rows should be 1', function(){\r",
+							"    pm.expect(response.changes).to.equal(1);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Catherine Brooks\",\r\n    \"description\": \"A lovely woman living in Great Britain. Lives her life right and enjoys every minute.\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/writers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"writers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get writer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b278aa73-c861-42da-aa76-87d406ae7a30",
+						"exec": [
+							"pm.test(\"Writer exist\", function () {\r",
+							"    let response = pm.response.json();\r",
+							"    let element = response.filter((e) => e.name === \"Catherine Brooks\")[0];\r",
+							"    let description = pm.environment.get('description');\r",
+							"    if(!element){ \r",
+							"        pm.expect(element.name,\r",
+							"        'This writer does not exist'\r",
+							"        ).to.not.exist;       \r",
+							"    }\r",
+							"    else if(element)\r",
+							"    { \r",
+							"        pm.expect(element.name,\r",
+							"        'Writers name '\r",
+							"        ).to.eql('Catherine Brooks');//Stupid\r",
+							"\r",
+							"        pm.expect(element.description,\r",
+							"        'Writers description'\r",
+							"        ).to.eql(description);\r",
+							"    }   \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/writers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"writers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete writer",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "540c3ee8-83fa-46f6-a851-7c8c32536d6d",
+						"exec": [
+							"let lastID = pm.environment.get(\"lastID\");\r",
+							"console.log(lastID);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "ca8fbec0-b99f-4ba8-86fd-cc5e28c33c64",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/writers/{{lastID}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"writers",
+						"{{lastID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Don't get writer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5efb7918-6a93-406c-8198-642d5dfb1a0e",
+						"exec": [
+							"pm.test(\"Writer is gone\", function () {\r",
+							"    let response = pm.response.json();\r",
+							"    let element = response.filter((e) => e.name === \"Catherine Brooks\");\r",
+							"    console.log(element.length);\r",
+							"    if(element.length === 1)\r",
+							"    { \r",
+							"         pm.expect(element.name,\r",
+							"        'This writer does still exist'\r",
+							"        ).to.not.exist;\r",
+							"    }   \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/writers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"writers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add orderLine",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e4a94639-ef43-459b-ad2e-f0f1fb3c43ee",
+						"exec": [
+							"let response = pm.response.json();\r",
+							"let lastID = response.lastID;\r",
+							"\r",
+							"pm.environment.set('orderLineId', JSON.stringify(lastID));\r",
+							"pm.environment.set('amount', '3');\r",
+							"pm.environment.set('book_ISBN_nr','124456689-X.');\r",
+							"\r",
+							"pm.test('Affected rows should be 1', function(){\r",
+							"    pm.expect(response.changes).to.equal(1);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"amount\": \"3\",\r\n    \"book_ISBN_nr\": \"124456689-X.\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/orderlines",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"orderlines"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get orderLine",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "315ae2ed-8783-4dc8-aaf4-40dba5d82d09",
+						"exec": [
+							"pm.test(\"Orderline exist\", function () {\r",
+							"    let jsonData = pm.response.json();\r",
+							"    let orderLineId = +pm.environment.get('orderLineId');\r",
+							"    \r",
+							"    //let element = response.map(function(e) { return e.id; }).indexOf(orderLineId);\r",
+							"    console.log(orderLineId);\r",
+							"    let element = jsonData.filter((e) => e.id === orderLineId)[0];//Här vill du ha ett unikt id\r",
+							"    let book_ISBN_nr = pm.environment.get('book_ISBN_nr');\r",
+							"    if(!element){ \r",
+							"        pm.expect(element.id,\r",
+							"        'This orderline does not exist'\r",
+							"        ).to.not.exist;      \r",
+							"    }\r",
+							"    else if(element)\r",
+							"    { \r",
+							"        pm.expect(element.amount,\r",
+							"        'Orderline number '\r",
+							"        ).to.eql(3);\r",
+							"\r",
+							"        pm.expect(element.book_ISBN_nr,\r",
+							"        'Orderlines book_ISBN_nr'\r",
+							"        ).to.eql(book_ISBN_nr);\r",
+							"    }   \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/orderlines",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"orderlines"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete orderLine",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ed10b80c-200b-4900-89c1-87d89a726aad",
+						"exec": [
+							"let lastID = pm.environment.get(\"orderLineId\");\r",
+							"console.log(lastID);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "d8096fd8-16fd-4431-b0a0-3f84f3b4326d",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/orderlines/{{lastID}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"orderlines",
+						"{{lastID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Don't get orderLine",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f3f780d0-c57b-4576-9f60-c702b050155b",
+						"exec": [
+							"pm.test(\"Orderline does not exist anymore\", function () {\r",
+							"    let orderLineId = +pm.environment.get('orderLineId');\r",
+							"    let response = pm.response.json();\r",
+							"    let element = response.filter((e) => e.id === orderLineId);\r",
+							"    console.log(element);\r",
+							"    if(element === 0){ \r",
+							"        pm.expect(response.amount,\r",
+							"        \"This orderline amount doesn't exists\"\r",
+							"        ).to.not.exist;    \r",
+							"    }\r",
+							"    else if(element === 1)\r",
+							"    { \r",
+							"         pm.expect(element.id,\r",
+							"        'This orderlineId still exists'\r",
+							"        ).to.not.exist; \r",
+							"    }   \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/orderlines",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"orderlines"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add book",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e957a59a-830d-4a78-8aae-1081e6142a5b",
+						"exec": [
+							"let response = pm.response.json();\r",
+							"let lastID = response.lastID;\r",
+							"\r",
+							"pm.environment.set('bookId', JSON.stringify(lastID));\r",
+							"pm.environment.set('title', 'Florida is not safe');\r",
+							"pm.environment.set('description','When Florida gets hit by a tornado, LadyQuinn has no choice but to try to do everything in her power to survive. She later on finds out that everyone has died and she is the only one left in the city.');\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"    \r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ISBN_nr\": \"553243894-X\",\r\n    \"title\": \"Florida is not safe\",\r\n    \"description\": \"When Florida gets hit by a tornado, LadyQuinn has no choice but to try to do everything in her power to survive. She later on finds out that everyone has died and she is the only one left in the city.\",\r\n    \"pages\": \"516\",\r\n    \"price\": \"230.59\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/books",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get book",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e5651e96-71db-4eca-841e-df587bf352d1",
+						"exec": [
+							"pm.test(\"Book exist\", function () {\r",
+							"    let response = pm.response.json();\r",
+							"    let bookId = +pm.environment.get('bookId');\r",
+							"    console.log(bookId);\r",
+							"    let element = response.filter((e) => e.id === bookId)[0];\r",
+							"    let description = pm.environment.get('description');\r",
+							"    if(!element){ \r",
+							"        pm.expect(element.id,\r",
+							"        'This book does not exist'\r",
+							"        ).to.not.exist;      \r",
+							"    }\r",
+							"    else if(element)\r",
+							"    { \r",
+							"        pm.expect(element.title,\r",
+							"        'Book title '\r",
+							"        ).to.eql('Florida is not safe');\r",
+							"\r",
+							"        pm.expect(element.description,\r",
+							"        'Book description'\r",
+							"        ).to.eql(description);\r",
+							"    }   \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/books",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete book",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "910610a0-5646-4276-9529-85f60cd067f9",
+						"exec": [
+							"let bookId = pm.environment.get(\"bookId\");\r",
+							"console.log(bookId);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "c84c6c19-4921-4d90-82b4-cf72f354d8dd",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/books/{{bookId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"books",
+						"{{bookId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Don't get book",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e8d5e9a2-02f3-46f8-9c04-e5eb83bcc14a",
+						"exec": [
+							"pm.test(\"Book is gone\", function () {\r",
+							"let jsonData = pm.response.json();\r",
+							"    let bookId = +pm.environment.get('bookId');\r",
+							"    let element = jsonData.filter((e) => e.id === bookId);\r",
+							"    if(element === 0){ \r",
+							"        pm.expect(element.id,\r",
+							"        'This Book is gone'\r",
+							"        ).to.not.exist;     \r",
+							"    }\r",
+							"    else if(element === 1)\r",
+							"    { \r",
+							"         pm.expect(element.id,\r",
+							"        'This Book does still exist'\r",
+							"        ).to.eql(bookId) \r",
+							"    }   \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/books",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"books"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

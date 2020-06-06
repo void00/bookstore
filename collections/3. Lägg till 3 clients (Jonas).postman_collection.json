@@ -1,0 +1,167 @@
+{
+	"info": {
+		"_postman_id": "6931dfae-de4c-4a1d-a1dd-4a81bc452230",
+		"name": "3. Lägg till 3 clients (Jonas)",
+		"description": "This adds clients and tst's that the clients are added. ",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add user to Clients",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "dd3ccc15-4608-4da0-838e-bd3be8c671a6",
+						"exec": [
+							"// Setting mockdata and counter as environement variables\r",
+							"// Note: Environement variables can only be strings!\r",
+							"if (!pm.environment.has(\"mockData\")) {\r",
+							"  let mockData = [\r",
+							"    {\r",
+							"      \"email\": \"jazivarsak@gmail.com\",\r",
+							"    },\r",
+							"    {\r",
+							"      \"email\": \"ccunshine2@wikispaces.com\",\r",
+							"    },\r",
+							"    {\r",
+							"      \"email\": \"bbunshine2@wikispaces.com\",\r",
+							"    },\r",
+							"    {\r",
+							"      \"email\": \"asunshine2@wikispaces.com\",\r",
+							"    },\r",
+							"    {\r",
+							"      \"email\": \"pdillimore3@who.int\"\r",
+							"    }\r",
+							"  ];\r",
+							"\r",
+							"  pm.environment.set(\"counter\", 0);\r",
+							"  pm.environment.set(\"mockData\", JSON.stringify(mockData));\r",
+							"}\r",
+							"\r",
+							"// Reading/parsing environment variables back to local variables\r",
+							"let counter = pm.environment.get(\"counter\") / 1;\r",
+							"let mockData = JSON.parse(pm.environment.get(\"mockData\"));\r",
+							"let { email } = mockData[counter]\r",
+							"// Save to environemnt for use in query\r",
+							"pm.environment.set(\"email\", email);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "98036e4c-ca7a-4bf7-88e0-5e6342283229",
+						"exec": [
+							"// The response as json\r",
+							"let response = pm.response.json();\r",
+							"\r",
+							"// Reading/parsing environment variables back to local variables\r",
+							"let counter = pm.environment.get(\"counter\") / 1;\r",
+							"let mockData = JSON.parse(pm.environment.get(\"mockData\"));\r",
+							"\r",
+							"// Add the insert id to the mockData and save to environment// Why?\r",
+							"mockData[counter].id = response.lastID;\r",
+							"pm.environment.set('mockData', JSON.stringify(mockData));\r",
+							"\r",
+							"// Test affectedRows\r",
+							"pm.test('Affected rows should be 1', function () {\r",
+							"    pm.expect(response.changes).to.equal(1);\r",
+							"});\r",
+							"\r",
+							"// Increment the counter and save to environment\r",
+							"counter++;\r",
+							"pm.environment.set('counter', counter);\r",
+							"\r",
+							"// Run request again if more mockdata\r",
+							"if (mockData[counter]) {\r",
+							"    postman.setNextRequest('Add user to Clients')\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"{{email}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/clients/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"clients",
+						""
+					]
+				},
+				"description": "This add one user to client-list"
+			},
+			"response": []
+		},
+		{
+			"name": "test-view-clients",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4d27ea22-ef61-4ed8-bd5e-4fa378b57b88",
+						"exec": [
+							"pm.test(\"Test clientEmail in table clients ccunshine2@wikispaces.com\", function () {\r",
+							"    let jsonData = pm.response.json();\r",
+							"    //let element = jsonData.map(function(e) { return e.authors; }).indexOf('Dave Hayes');\r",
+							"    let element = jsonData.filter((e) => e.email === 'ccunshine2@wikispaces.com')[0];\r",
+							"    if (!element) {\r",
+							"        pm.expect(element.email,\r",
+							"            'No ccunshine2@wikispaces.com could be found'\r",
+							"        ).to.not.exist()\r",
+							"    }\r",
+							"    else if (element) {\r",
+							"        pm.expect(element.email,\r",
+							"            'Wrong e-mail'\r",
+							"        ).to.eql('ccunshine2@wikispaces.com');\r",
+							"\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/clients/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"clients",
+						""
+					]
+				},
+				"description": "This tst's the order clientEmail in the order_details view. "
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

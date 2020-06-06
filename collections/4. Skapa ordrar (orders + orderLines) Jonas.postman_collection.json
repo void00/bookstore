@@ -1,0 +1,512 @@
+{
+	"info": {
+		"_postman_id": "71427a93-e268-4331-997f-13e36c7558b5",
+		"name": "4. Skapa ordrar (orders + orderLines) Jonas",
+		"description": "Creates orders in bridgetable based on existing order + existing orderlines.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create orderlines",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "242e6a5a-8e6a-417a-84c3-f305ee166d1c",
+						"exec": [
+							"// Setting mockdata and counter as environement variables\r",
+							"// Note: Environement variables can only be strings!\r",
+							"if (!pm.environment.has(\"mockData\")) {\r",
+							"  let mockData = [\r",
+							"    {\r",
+							"      \"amount\": \"5\",\r",
+							"      \"book_ISBN_nr\": \"335339993-3\",\r",
+							"    },\r",
+							"    {\r",
+							"      \"amount\": \"5\",\r",
+							"      \"book_ISBN_nr\": \"735896022-X\",\r",
+							"    },\r",
+							"    {\r",
+							"      \"amount\": \"7\",\r",
+							"      \"book_ISBN_nr\": \"8277784617-0\"\r",
+							"    }\r",
+							"  ];\r",
+							"  pm.environment.set(\"counter\", 0);\r",
+							"  pm.environment.set(\"mockData\", JSON.stringify(mockData));\r",
+							"}\r",
+							"\r",
+							"// Reading/parsing environment variables back to local variables\r",
+							"let counter = +pm.environment.get(\"counter\");\r",
+							"let mockData = JSON.parse(pm.environment.get(\"mockData\"));\r",
+							"let {amount, book_ISBN_nr} = mockData[counter];\r",
+							"// Save to environemnt for use in query\r",
+							"pm.environment.set('amount', amount);\r",
+							"pm.environment.set('book_ISBN_nr', book_ISBN_nr);\r",
+							"console.log(mockData);\r",
+							"//pm.environment.set('client_email', email);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "8bc9c086-b57c-4954-9df1-1e19f74b5b1b",
+						"exec": [
+							"let response = pm.response.json();\r",
+							"// Reading/parsing environment variables back to local variables\r",
+							"let counter = +pm.environment.get(\"counter\");\r",
+							"let mockData = JSON.parse(pm.environment.get(\"mockData\"));\r",
+							"\r",
+							"// Add the insert id to the mockData and save to environment\r",
+							"mockData[counter].id = response.lastID;\r",
+							"pm.environment.set('mockData', JSON.stringify(mockData));\r",
+							"\r",
+							"// Test affectedRows\r",
+							"pm.test('affectedRows should be 1', function(){\r",
+							"    pm.expect(response.changes).to.equal(1);\r",
+							"});\r",
+							"\r",
+							"// Increment the counter and save to environment\r",
+							"counter++;\r",
+							"pm.environment.set('counter', counter);\r",
+							"console.log(' mockData: '+  mockData);\r",
+							"\r",
+							"// Run request again if more mockdata\r",
+							"if (mockData[counter]) {\r",
+							"    postman.setNextRequest('create orderlines')\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"amount\": \"{{amount}}\",\r\n\t\"book_ISBN_nr\": \"{{book_ISBN_nr}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/orderlines/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"orderlines",
+						""
+					]
+				},
+				"description": "Create orderlines.\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "create order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7d2a970b-736b-45a0-8629-1c0aa9ea045a",
+						"exec": [
+							"// The response as json\r",
+							"let response = pm.response.json();\r",
+							"\r",
+							"// Reading/parsing environment variables back to local variables\r",
+							"let counter = +pm.environment.get(\"counter\");\r",
+							"let mockDataOrder = JSON.parse(pm.environment.get(\"mockDataOrder\"));\r",
+							"\r",
+							"// Add the insert id to the mockData and save to environment\r",
+							"mockDataOrder[counter].id = response.lastID;\r",
+							"pm.environment.set(\"mockDataOrder\", JSON.stringify(mockDataOrder));\r",
+							"\r",
+							"// Test affectedRows\r",
+							"pm.test('affectedRows should be 1', function(){\r",
+							"    pm.expect(response.changes).to.equal(1);\r",
+							"});\r",
+							"\r",
+							"// Increment the counter and save to environment\r",
+							"counter++;\r",
+							"pm.environment.set(\"counter\", counter);\r",
+							"\r",
+							"// Run request again if more mockdata\r",
+							"if(mockDataOrder[counter]){\r",
+							"    postman.setNextRequest('create order');\r",
+							"}\r",
+							"console.log(mockDataOrder);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ec45f7fb-e82b-4508-a45a-32609c90f320",
+						"exec": [
+							"// Setting mockdata and counter as environement variables\r",
+							"// Note: Environement variables can only be strings!\r",
+							"if (!pm.environment.has(\"mockDataOrder\")) {\r",
+							"    let mockDataOrder = [\r",
+							"    {\r",
+							"      \"date\":\"2020-08-30 10:26:27\",\r",
+							"      \"client_email\":\"mhurdisc@ow.ly\",\r",
+							"    },\r",
+							"    {\r",
+							"      \"date\":\"2020-09-30 10:26:27\",\r",
+							"      \"client_email\":\"fdomicanb@free.fr\",\r",
+							"    },\r",
+							"    {\r",
+							"      \"date\":\"2020-10-30 10:26:27\",\r",
+							"      \"client_email\":\"okernera@chronoengine.com\"\r",
+							"    }\r",
+							"    ];\r",
+							"    pm.environment.set(\"counter\", 0);\r",
+							"    pm.environment.set(\"mockDataOrder\", JSON.stringify(mockDataOrder));\r",
+							" }\r",
+							"\r",
+							" // Reading/parsing environment variables back to local variables\r",
+							" let counter = +pm.environment.get(\"counter\");\r",
+							" let mockDataOrder = JSON.parse(pm.environment.get(\"mockDataOrder\"));\r",
+							" let {date, client_email} = mockDataOrder[counter];\r",
+							" // Save to environemnt for use in query\r",
+							" pm.environment.set('date', JSON.stringify(date));\r",
+							" pm.environment.set('client_email', JSON.stringify(client_email));\r",
+							" console.log(mockDataOrder);\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"/*// Setting mockdata and counter as environement variables\r",
+							"// Note: Environement variables can only be strings!\r",
+							"if (!pm.environment.has(\"mockData\")) {\r",
+							"  let mockData = [\r",
+							"    {\r",
+							"      \"date\": \"2020-10-24 18:13:59\",\r",
+							"      \"client_email\": \"gbane0@pen.io\",\r",
+							"    },\r",
+							"    {\r",
+							"      \"date\": \"2019-05-24 18:13:59\",\r",
+							"      \"client_email\": \"cdelamere1@gravatar.com\",\r",
+							"    },\r",
+							"    {\r",
+							"      \"date\": \"2020-05-23 12:13:59\",\r",
+							"      \"client_email\": \"dmossman2@goo.gl\"\r",
+							"    }\r",
+							"  ];\r",
+							"  pm.environment.set(\"counter\", 0);\r",
+							"  pm.environment.set(\"mockData\", JSON.stringify(mockData));\r",
+							"}\r",
+							"\r",
+							"// Reading/parsing environment variables back to local variables\r",
+							"let counter = pm.environment.get(\"counter\") / 1;\r",
+							"let mockData = JSON.parse(pm.environment.get(\"mockData\"));\r",
+							"let {client_email} = mockData[counter];\r",
+							"// Save to environemnt for use in query\r",
+							"//pm.environment.set('date', JSON.stringify(date));\r",
+							"pm.environment.set('client_email', client_email);\r",
+							"*/"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"date\": {{date}},\r\n\t\"client_email\": {{client_email}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/orders/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"orders",
+						""
+					]
+				},
+				"description": "test the update for orderlines"
+			},
+			"response": []
+		},
+		{
+			"name": "create-ordersXorderLine",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "a9bee51b-db8d-47cd-8356-46dd5260ddbb",
+						"exec": [
+							"// Setting mockdata and counter as environement variables\r",
+							"// Note: Environement variables can only be strings!\r",
+							"if (!pm.environment.has(\"mockDataOrderXLine\")) {\r",
+							"  let mockDataOrderXLine = [\r",
+							"    {\r",
+							"      \"order_line_id\": 21,\r",
+							"      \"order_id\": 26,\r",
+							"    }, \r",
+							"    {\r",
+							"      \"order_line_id\": 22,\r",
+							"      \"order_id\": 27,\r",
+							"    }, \r",
+							"    {\r",
+							"      \"order_line_id\": 23,\r",
+							"      \"order_id\": 28\r",
+							"    }\r",
+							"  ];\r",
+							"  pm.environment.set(\"counter\", 0);\r",
+							"  pm.environment.set(\"mockDataOrderXLine\", JSON.stringify(mockDataOrderXLine));\r",
+							"}\r",
+							"\r",
+							"// Reading/parsing environment variables back to local variables\r",
+							"let counter = +pm.environment.get(\"counter\");\r",
+							"let mockDataOrderXLine = JSON.parse(pm.environment.get(\"mockDataOrderXLine\"));\r",
+							"let {order_line_id, order_id} = mockDataOrderXLine[counter];\r",
+							"//console.log(mockDataOrderXLine);\r",
+							"\r",
+							"pm.environment.set('order_line_id', order_line_id);\r",
+							"pm.environment.set('order_id', order_id);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "cbedb6c8-9697-4d27-a24b-a7c58ec6def7",
+						"exec": [
+							"let response = pm.response.json();\r",
+							"// Reading/parsing environment variables back to local variables\r",
+							"let counter = +pm.environment.get(\"counter\");\r",
+							"let mockDataOrderXLine = JSON.parse(pm.environment.get(\"mockDataOrderXLine\"));\r",
+							"\r",
+							"// Add the insert id to the mockData and save to environment\r",
+							"mockDataOrderXLine[counter].id = response.lastID;\r",
+							"pm.environment.set('mockData', JSON.stringify(mockDataOrderXLine));\r",
+							"\r",
+							"// Test affectedRows\r",
+							"pm.test('affectedRows should be 1', function(){\r",
+							"    pm.expect(response.changes).to.equal(1);\r",
+							"});\r",
+							"\r",
+							"// Increment the counter and save to environment\r",
+							"counter++;\r",
+							"pm.environment.set('counter', counter);\r",
+							"console.log(' mockDataOrderXLine: '+ mockDataOrderXLine);\r",
+							"\r",
+							"// Run request again if more mockdata\r",
+							"if(mockDataOrderXLine[counter]){\r",
+							"    postman.setNextRequest('create-ordersXorderLine');\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"order_line_id\": {{order_line_id}},\n\t\"order_id\": {{order_id}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/orderlinesXorders/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"orderlinesXorders",
+						""
+					]
+				},
+				"description": "Create orders (orders + orderLines)"
+			},
+			"response": []
+		},
+		{
+			"name": "created-orderlines",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "650fcb58-90d2-41e5-bab4-eb5d0fb65faf",
+						"exec": [
+							"\r",
+							"\r",
+							"// Tst; that spec order has the right clientEmail\r",
+							"pm.test('tst order 21 is on the orderlines', function () {\r",
+							"    let jsonData = pm.response.json();\r",
+							"    //let orderNumber, orderLineId; \r",
+							"    let element = jsonData.filter((e) => e.order_id === 26);\r",
+							"    //let elementFinal = element.filter((e) => e.order_line_id === 21);\r",
+							"    console.log(element);\r",
+							"    if (element.length === 0) {\r",
+							"        pm.expect(element.order_line_id,\r",
+							"            'Order and orderline non existing'\r",
+							"        ).to.exist;\r",
+							"    }\r",
+							"    else if (element.length === 1) {\r",
+							"        pm.expect(element[0].order_line_id,\r",
+							"            'wrong order_line_id'\r",
+							"        ).to.eql(21);\r",
+							"\r",
+							"        pm.expect(element[0].order_id,\r",
+							"            'wrong order_id'\r",
+							"        ).to.eql(26);\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/orderlinesXorders/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"orderlinesXorders",
+						""
+					]
+				},
+				"description": "create-orderlines"
+			},
+			"response": []
+		},
+		{
+			"name": "create-order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ee0645a3-de0d-4908-ac02-09df3783f82a",
+						"exec": [
+							"pm.test('tst order nr: 24', function () {\r",
+							"    let jsonData = pm.response.json();\r",
+							"    let element = jsonData.filter((e) => e.orderNumber === 24);\r",
+							"\r",
+							"    if (element.length === 0) {\r",
+							"        pm.expect(element.orderNumber,\r",
+							"            'Order 24 is not in order_details'\r",
+							"        ).to.not.exist;\r",
+							"    }\r",
+							"    else if (element.length === 1) {\r",
+							"        pm.expect(element[0].clientEmail,\r",
+							"            'wrong clientEmail'\r",
+							"        ).to.eql('okernera@chronoengine.com');\r",
+							"\r",
+							"         pm.expect(element[0].orderLineId,\r",
+							"            'wrong orderLineId'\r",
+							"        ).to.eql(17);\r",
+							"\r",
+							"         pm.expect(element[0].book_ISBN_nr,\r",
+							"            'wrong book_ISBN_nr'\r",
+							"        ).to.eql('934435720-X');\r",
+							"\r",
+							"         pm.expect(element[0].amountOfthisBookOrderded,\r",
+							"            'wrong amountOfthisBookOrderded'\r",
+							"        ).to.eql(1);\r",
+							"\r",
+							"         pm.expect(element[0].bookTitle,\r",
+							"            'wrong bookTitle'\r",
+							"        ).to.eql('Journey 2: The Mysterious Island');\r",
+							"\r",
+							"         pm.expect(element[0].authorName,\r",
+							"            'wrong orderDate'\r",
+							"        ).to.eql('Duane Reedman');\r",
+							"\r",
+							"         pm.expect(element[0].authorDescription,\r",
+							"            'wrong authorDescription'\r",
+							"        ).to.eql('Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.\\nMaecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui.');\r",
+							"\r",
+							"        pm.expect(element[0].pages,\r",
+							"            'wrong pages'\r",
+							"        ).to.eql(322);\r",
+							"\r",
+							"        pm.expect(element[0].bookDescription,\r",
+							"            'wrong bookDescription'\r",
+							"        ).to.eql('Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus.\\nCurabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam.');\r",
+							"\r",
+							"        pm.expect(element[0].price,\r",
+							"            'wrong price'\r",
+							"        ).to.eql(1266.82);\r",
+							"    }\r",
+							"\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/order_details/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"order_details",
+						""
+					]
+				},
+				"description": "create an order"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

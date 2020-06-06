@@ -1,0 +1,473 @@
+{
+	"info": {
+		"_postman_id": "d56524f2-a0b8-4360-b424-3650df0a0717",
+		"name": "1 och 2. Lägg till 5 writers och 8 böcker",
+		"description": "Gruppen Ida, Jaz, Jonas och Oscar. ",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add-writers-OT",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "fae3bb3f-2583-4e0e-a6d3-48d98097e3f2",
+						"exec": [
+							"if (!pm.environment.has(\"mockDataWriter\")) {",
+							"    let mockDataWriter = [",
+							"      {",
+							"        \"name\": \"Neon Revolt\",",
+							"        \"description\": \"Neon Revolt is the nom de plume of an Anon who has dedicated the last few years to understanding, dissecting, and disseminating information related to the Military Intelligence operation known simply as 'QAnon.' As a prominent member of the QAnon community since the beginning, and one completely steeped in online culture, Neon has been censored, deplatformed, slandered and maligned in a way few others have experienced, precisely for the reason that few are able to effectively relay the message of Q in such an approachable and engaging way. After becoming convinced of the truthfulness of Q himself, Neon, as a storyteller at heart, has taken his skills as a screenwriter and applied them to telling one of the greatest stories humanity has ever known, even as it unfolds in real time. Through collecting and observing the disparate and high-level complexities of modernity while having a nose for sniffing out Deep State actors and criminals, Neon cuts through the MSM spin, and synthesizes the truth down into potent, powerful, and occasionally prescient stories. His first book, Revolution Q, is the culmination of all his previous efforts, and one which he hopes will serve humanity well, moving into the future.\"",
+							"      },",
+							"      {",
+							"        \"name\": \"Peter B. Meyer\",",
+							"        \"description\": \"The Awakening is just that! Author Peter B. Meyer makes it soberingly clear that, unless we, as responsible adults take action now, the impact on ourselves and our children, the future generation, will be irreversible and nothing short of disastrous.\"",
+							"      },",
+							"      {",
+							"        \"name\": \"Michael Knight\",",
+							"        \"description\": \"Michael Knight is a retired award-winning journalist who began his career in New Zealand in 1960. and since then has worked internationally in all media. He is the author of 'Qanon And The Great Awakening' (Nov 2019) and 'President Trump And The New World Order - The Ramtha Trump Prophecy,' (Sept 2017), in both Kindle and Paperback editions. He is a two-time winner of the Hoben Prize for Journalism, a winner in a national short story contest, and has co-authored two books, 'Building With Logs in New Zealand,' (now out of print) and 'Playboys of the South Pacific' - the seafaring life of John Glennie who would later survive 119 days in his upturned trimaran. Since moving to America Knight has directed the documentary, 'Contact Has Begun - the James Gilliland Story, and is currently editor of 'The North Star Newsletter,' (established March 2015). Free and subscription newsletters available at website https://www.northstarnewsletter.com Twitter michaelwmknight\"",
+							"      },",
+							"      {",
+							"        \"name\": \"Robert S Smith\",",
+							"        \"description\": \"The authors writing style makes this very easy to read, with lots of pictures. His explanation of some major historical events in American history make far more sense than the crap I was taught in school. And then he explains how Q-Anon and Trump are working to stop the 'black hats'. After reading this book, I actually have hope that they will succeed.\"",
+							"      },",
+							"      {",
+							"        \"name\": \"Redpill TheWorld\",",
+							"        \"description\": \"Red pill Melissa does amazing things in her explanation and storytelling. She's an incredible writer and I have learned so much in this book.\"",
+							"      },",
+							"      {",
+							"        \"name\": \"Dave Hayes\",",
+							"        \"description\": \"Dave Hayes is a teacher, public speaker, and author. He has written more than a dozen books on faith and the spiritual life under the pen name Praying Medic.\"",
+							"      }",
+							"    ];",
+							"    pm.environment.set(\"counter\", 0);",
+							"    pm.environment.set(\"mockDataWriter\", JSON.stringify(mockDataWriter));",
+							" }",
+							"",
+							" // Reading/parsing environment variables back to local variables",
+							" let counter = +pm.environment.get(\"counter\");",
+							" let mockDataWriter = JSON.parse(pm.environment.get(\"mockDataWriter\"));",
+							" let {name, description} = mockDataWriter[counter]",
+							" // Save to environemnt for use in query",
+							" pm.environment.set('name', name);",
+							" pm.environment.set('description', description);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "159cce61-bf76-479d-acfe-9ef08d148e84",
+						"exec": [
+							"// The response as json",
+							"let response = pm.response.json();",
+							"",
+							"// Reading/parsing environment variables back to local variables",
+							"let counter = +pm.environment.get(\"counter\");",
+							"let mockDataWriter = JSON.parse(pm.environment.get(\"mockDataWriter\"));",
+							"",
+							"// Add the insert id to the mockData and save to environment// Why?",
+							"mockDataWriter[counter].id = response.lastID;",
+							"pm.environment.set('mockDataWriter', JSON.stringify(mockDataWriter));",
+							"",
+							"// Test affectedRows",
+							"pm.test('Affected rows should be 1', function(){",
+							"    pm.expect(response.changes).to.equal(1);",
+							"});",
+							"",
+							"// Increment the counter and save to environment",
+							"counter++;",
+							"pm.environment.set('counter', counter);",
+							"",
+							"// Run request again if more mockdata",
+							"if(mockDataWriter[counter]){",
+							"    postman.setNextRequest('Add-writers-OT');",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"{{name}}\",\n  \"description\": \"{{description}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/writers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"writers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add-books-OT",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "3290ca0d-6989-4048-a0e2-10334e0809ee",
+						"exec": [
+							"if (!pm.environment.has(\"mockDataBooks\")) {",
+							"    let mockDataBooks = [",
+							"      {",
+							"        \"ISBN_nr\": \"B07PJZQ8PQ\",",
+							"        \"title\": \"QAnon: An Invitation to The Great Awakening\",",
+							"        \"description\": \"This book is a field guide to an important chunk of reality that’s been carefully hidden and wrongly discredited by the media. It reveals an extraordinary movement underway, a battle of epic proportions. Whether you know it or not, you’re involved because the result of this battle will determine the fate of your children and future generations both in America and around the world. However, you may only be vaguely aware of QAnon or “Q,” if at all. If you value the truth, you will want to learn about the QAnon movement and the battle that is being waged on your behalf to protect you and your children from abuse and enslavement. The war between Good and Evil is no longer merely symbolic. Evil is being, tried and brought to justice in federal courts and military tribunals today. Criminally corrupt government leaders, celebrities, religious leaders, media figures, and corporate heads will be tried and punished for crimes involving treason, human trafficking, ritual sacrifice and unspeakable perversions. QAnon: An Invitation to The Great Awakening tells the history of an anonymous poster on the free-speech websites 4Chan and then 8Chan and how he (or perhaps they) built a following of millions of viewers worldwide. With an insider’s knowledge of the battle plan (see “The Plan to Save the World”), and “Q” level military intelligence clearance, QAnon’s communications are often cryptic and coded. QAnon is a master of the Socratic method, asking questions and imploring followers to do their own research, to be logical and to think for themselves.\",",
+							"        \"pages\": 257,",
+							"        \"price\": 105.90",
+							"      },",
+							"      {",
+							"        \"ISBN_nr\": \"B075QJR1GS\",",
+							"        \"title\": \"President Trump And The New World Order\",",
+							"        \"description\": \"This book was published in September 2017 - a month before the Q or Qanon team began attracting thousands of patriots to a discussion board on the Internet. Using the metaphor of Neo taking the Red Pill in the movie The Matrix, they have become a force to reckon with in what is The Great Awakening. To Make America Great Again ( MAGA ) President Trump has to Drain The Swamp - and he is doing it against all opposition from the Deep State and the Fake News media. Taking the lid off the pyramid of power, 'President Trump And The New World Order' walks you through the veil behind which families such as the Rothschilds and Rockefellers have spent generations, both publicly and behind the scenes, manipulating governments, politicians, and ordinary people alike in order to build their New World Order. President Trump is under siege as outlets like CNN (referred to in this book as the Cabal News Network), continue to insist that he is unfit for the job. What they will never report - but what is revealed here, exclusively - is that President Donald Trump has friends in very high places, which is well documented in this book - along with proof of a prophecy about President Trump, and UFOs, and why that encounter has resulted in some truly radical changes for America and the entire world. This book provides new and rational insights into the many ways in which deceivers under the appearance of doing good have indeed created and indulged in a tremendous amount of evil. This book is the backstory about how the Deep State evolved - and how it will end.\",",
+							"        \"pages\": 126,",
+							"        \"price\": 52.90",
+							"      },",
+							"      {",
+							"        \"ISBN_nr\": \"B07L8QMYCF\",",
+							"        \"title\": \"Questions Answered: An Introduction to QAnon and the Great Awakening\",",
+							"        \"description\": \"Would you like to decode current event and news coverage to uncover the real truth found beneath the lies? Verbal diarrhea isn't in anyone's best interest, it's more effective to evaluate all available information and process the facts before letting loose an undigested data dump. We have patriots within the movement who have dedicated their lives to educating the masses, use them a resource and heed their counsel. By reading this book, you will have a better understanding of how to uncover the secrets in Q's messages and where to look for guidance when you're confused about what to do next. You can't know everything but you should know where to look.\",",
+							"        \"pages\": 45,",
+							"        \"price\": 31.70",
+							"      },",
+							"       {",
+							"       \"ISBN_nr\": \"B086G11WJX\",",
+							"        \"title\": \"The Hidden Secrets of Money: Discover what 95% of people will never know about money and investing\",",
+							"        \"description\": \"Welcome to The Hidden Secrets of Money. You are about to discover what 95% of people will never know about money and investing. If you ever wondered why 95% of the world’s money is owned by only 5% of the people, then you are going to find this a very valuable read. You will also learn why 90% people are struggling financially and even more importantly, what you can do about it. There has never been a better time in history to be taking advantage of all the wealth creating vehicles that there are today. I am very happy to now pass these financial secrets on to you, so that can then teach your children and your closest near ones and dear ones, and to create a brighter financial future for all.\",",
+							"        \"pages\": 28,",
+							"        \"price\": 31.70",
+							"      },",
+							"      {",
+							"      \"ISBN_nr\": \"B07NR8R4GZ\",",
+							"      \"title\": \"QAnon and the Battle of Armageddon: Destroying the New World order and Taking the Millennial Kingdom by Force\",",
+							"      \"description\": \"What we are all experiencing worldwide is not just another political event. As Qanon post 2937 says (QMap.pub), 'This is not simply another four-year election. This is a crossroads in the history of our civilization that will determine whether or not we, the people, reclaim control over our government. - POTUS ' He's not just talking about the U.S. Government, or any single nation's government. He means Reclaim Control Over the Governing of the World from the worldwide criminal mafia. This will transform the world for 1000 years! Literally. Where do I get that? From the Bible... This is the Great Awakening. We are fighting the New World Order in this Epic Battle of Armageddon. Good versus Evil. We are embarking on 1000 years of peace and health and wealth for all of humanity! The Bible calls this the Millennial Kingdom of Christ as in- 'His Kingdom come, His will be done on earth as it is in Heaven.' The Kingdom of Christ is when: • Christ assumes His authority as King on earth, • Christ removes those who have usurped His throne, • The 'Good Guys' finally rule the earth with Him, straightening out this whole mess the DS criminals have made! No matter what the enemy tries, there’s nothing he can do to stop this! As Q said from the beginning, Big. Bigger! BIGGEST!!! This truly is the BIGGEST! That sounds Impossible! Outrageous! Too good to be true! But the Bible is chock-full of this promise. Sadly most ‘Bible scholars” don’t recognize it yet. Just like so-called “scholars” have missed what the LORD was doing from time immemorial! Just like we have been under mass deception by “experts” for years! You are welcome to simply believe what religious pundits, and political pundits, and media pundits, and every other pundit says, OR You are invited to join the white hats in the fight to take back our world, and have your eyes opened to what the LORD has promised over and over in His Word, and how He is fulfilling those promises in our Day! You will be very glad you found this book.\",",
+							"      \"pages\": 204,",
+							"      \"price\": 59.90",
+							"      },",
+							"      {",
+							"      \"ISBN_nr\": \"B07ZTKYTK9\",",
+							"      \"title\": \"Revolution Q: The Story of QAnon and the 2nd American Revolution\",",
+							"      \"description\": \"Who Is QAnon? There's a revolution going on in America, and up until this point, most had no idea anything was happening at all. Unbeknownst to the general public, an insider embedded deep within the Trump administration was given a nearly impossible task: Assemble a team of patriots; Military Intelligence types, who knew the real score. Bypass the media and create a parallel construction. Engage with a select group of superlative civilians, so that they can spread the word. Systematically expose a world-wide death-cult that has seeped in to all levels of power, in all countries, and which has ruled for generations. And finally... Dismantle this Hellish Cabal, before dragging them in to face finally justice for their countless crimes against humanity. Along the way, thousands of 'digital soldiers' volunteered their time, their energy, and their resources to advancing this cause. And as the word of QAnon spread, their ranks and exploits grew. I, Neon Revolt, feel privileged to count myself among their ranks. This is my story. This is the story of Anons and the Great Awakening. This is the story of QAnon.\",",
+							"      \"pages\": 827,",
+							"      \"price\": 95.30",
+							"    },",
+							"    {",
+							"      \"ISBN_nr\": \"B07R671BSW\",",
+							"      \"title\": \"QAnon and 1000 Years of Peace: Destroying the New World Order and Taking the Kingdom of Christ by Force!\",",
+							"      \"description\": \"What we are all experiencing worldwide is not just another political event. As Qanon post 2937 says (QMap dot pub), 'This is not simply another four-year election. This is a crossroads in the history of our civilization that will determine whether or not we, the people, reclaim control over our government. - POTUS ” He's not just talking about the U.S. Government, or any single nation's government.  He means Reclaim Control Over the Governing of the World from the worldwide criminal mafia. This will transform the world for 1000 years! Literally. Where do I get that? From the Bible is all…. This is the Great Awakening. We are fighting the New World Order in this epic Battle of Armageddon. Good versus Evil. We are embarking on 1000 years of peace and health and wealth for all of humanity! The Bible calls this the Millennial Kingdom of Christ as in- “His Kingdom come, His will be done on earth as it is in Heaven.” The Kingdom of Christ is when: • Christ assumes His authority as King on earth, • Christ removes those who have usurped His throne, • The 'Good Guys' finally rule the earth with Him,  straightening out this whole mess the DS criminals have made! No matter what the enemy tries, there’s nothing he can do to stop this! As Q said from the beginning, Big. Bigger! BIGGEST!!! This truly is the BIGGEST! That sounds Impossible!  Outrageous!  Too good to be true! But the Bible is chock-full of this promise. Sadly most ‘Bible scholars” don’t recognize it yet. Just like so-called “scholars” have missed what the LORD was doing from time immemorial!   Just like we have been under mass deception by “experts” for years! You are welcome to simply believe what religious pundits, and political pundits, and media pundits, and every other pundit says, OR You are invited to join the white hats in the fight to take back our world, and have your eyes opened to what the LORD has promised over and over in His Word, and how He is fulfilling those promises in our Day!  You will be very glad you found this book.\",",
+							"      \"pages\": 204,",
+							"      \"price\": 59.90",
+							"      },",
+							"      {",
+							"      \"ISBN_nr\": \"B07Q3173Y5\",",
+							"      \"title\": \"Q Anon / The Storm: A 120 Year Timeline\",",
+							"      \"description\": \"Who or what is the anonymous Internet poster, 'Q Anon' and why is the mainstream media attacking him so much? Well, it turns out that a global conspiracy among many of the elites of banking, media, politics, business, academia and Hollywood to gradually tear down the United States of America (and all sovereign nations) and impose a communistic world government dictatorship in its place, has existed for generations. The elites of this Global Mafia are also referred to as “NWO” or “The Cabal” or “Globalists” They have been behind all the wars, social turmoil and economic hardships that have plagued humanity for the past two centuries. The Globalist Mafia has seemed unstoppable, until Q and friends came along. This may end up being a story which will be talked about for centuries to come. Learn about it now.\",",
+							"      \"pages\": 75,",
+							"      \"price\": 59.90",
+							"    },",
+							"    {",
+							"      \"ISBN_nr\": \"B0849KFDRP\",",
+							"      \"title\": \"Calm before the Storm (Q Chronicles Book 1)\",",
+							"      \"description\": \"Are we living under a two-tiered system of justice? Why do the wealthy and powerful escape prosecution for their crimes? Using wit, wisdom, and gravity, an unknown intelligence insider known as “Q” has been communicating with anonymous citizens on message boards since 2017. Q says corruption is worse than we know. It has invaded the corporate world, the media, academia, Hollywood, the church and other parts of society. It is the cause of war, poverty and countless problems that rob us of our potential. Q’s mission is to bring about the “Great Awakening”— a coming era when we'll unplug from the media programming that has indoctrinated us and awaken to the truth. The truth is: corruption is deeply entrenched in our society. But the two-tiered system of justice that has enabled it is being dismantled and replaced. A storm is coming that will sweep criminal power brokers into the dustbin of history. Get your popcorn ready. The show is about to begin, and you have a front-row seat.\",",
+							"      \"pages\": 356,",
+							"      \"price\": 105.90",
+							"    }       ",
+							"    ];",
+							"    pm.environment.set(\"counter\", 0);",
+							"    pm.environment.set(\"mockDataBooks\", JSON.stringify(mockDataBooks));",
+							" }",
+							"",
+							" // Reading/parsing environment variables back to local variables",
+							" let counter = +pm.environment.get(\"counter\");",
+							" let mockDataBooks = JSON.parse(pm.environment.get(\"mockDataBooks\"));",
+							" let {ISBN_nr, title, description, pages, price} = mockDataBooks[counter]",
+							" // Save to environemnt for use in query",
+							" pm.environment.set('ISBN_nr', ISBN_nr);",
+							" pm.environment.set('title', title);",
+							" pm.environment.set('description', description);",
+							" pm.environment.set('pages', pages);",
+							" pm.environment.set('price', price);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "ec50552c-af0a-490a-af09-9a1f10495bf6",
+						"exec": [
+							"// The response as json",
+							"let response = pm.response.json();",
+							"",
+							"// Reading/parsing environment variables back to local variables",
+							"let counter = +pm.environment.get(\"counter\");",
+							"let mockDataBooks = JSON.parse(pm.environment.get(\"mockDataBooks\"));",
+							"",
+							"// Add the insert id to the mockData and save to environment// Why?",
+							"mockDataBooks[counter].id = response.lastID;",
+							"pm.environment.set('mockDataBooks', JSON.stringify(mockDataBooks));",
+							"",
+							"// Test affectedRows",
+							"pm.test('Affected rows should be 1', function(){",
+							"    pm.expect(response.changes).to.equal(1);",
+							"});",
+							"",
+							"// Increment the counter and save to environment",
+							"counter++;",
+							"pm.environment.set('counter', counter);",
+							"",
+							"// Run request again if more mockdata",
+							"if(mockDataBooks[counter]){",
+							"    postman.setNextRequest('Add-books-OT');",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"ISBN_nr\": \"{{ISBN_nr}}\",\n  \"title\": \"{{title}}\",\n  \"description\": \"{{description}}\",\n  \"pages\": \"{{pages}}\",\n  \"price\": \"{{price}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/books",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add-booksToWriters-OT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d955d438-5b3f-42ea-a8f3-9b042ebf25a6",
+						"exec": [
+							"// The response as json",
+							"let response = pm.response.json();",
+							"",
+							"// Reading/parsing environment variables back to local variables",
+							"let counter = +pm.environment.get(\"counter\");",
+							"let mockDataWriterXBooks = JSON.parse(pm.environment.get(\"mockDataWriterXBooks\"));",
+							"",
+							"// Add the insert id to the mockData and save to environment// Why?",
+							"mockDataWriterXBooks[counter].id = response.lastID;",
+							"pm.environment.set('mockDataWriterXBooks', JSON.stringify(mockDataWriterXBooks));",
+							"",
+							"// Test affectedRows",
+							"pm.test('Affected rows should be 1', function () {",
+							"    pm.expect(response.changes).to.equal(1);",
+							"});",
+							"",
+							"// Increment the counter and save to environment",
+							"counter++;",
+							"pm.environment.set('counter', counter);",
+							"",
+							"// Run request again if more mockdata",
+							"if (mockDataWriterXBooks[counter]) {",
+							"    postman.setNextRequest('Add-booksToWriters-OT');",
+							"}",
+							"else {",
+							"    postman.setNextRequest('Test view of Dave Hayes and his book OT');",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d0174b33-dd57-400c-90c1-e122b962feb3",
+						"exec": [
+							"if (!pm.environment.has(\"mockDataWriterXBooks\")) {",
+							"  let mockDataWriterXBooks = [",
+							"    {",
+							"      \"writer_id\": \"25\",//Neon",
+							"      \"book_ISBN_nr\": \"B07ZTKYTK9\"",
+							"    },//",
+							"    {",
+							"      \"writer_id\": \"25\",//Neon",
+							"      \"book_ISBN_nr\": \"B07PJZQ8PQ\"",
+							"    },",
+							"    {",
+							"      \"writer_id\": \"25\",//Neon",
+							"      \"book_ISBN_nr\": \"B07L8QMYCF\"",
+							"    },",
+							"    {",
+							"      \"writer_id\": \"25\",//Neon",
+							"      \"book_ISBN_nr\": \"B086G11WJX\"",
+							"    },",
+							"    {",
+							"      \"writer_id\": \"27\",//Michael Knight ",
+							"      \"book_ISBN_nr\": \"B075QJR1GS\"",
+							"    },",
+							"    {",
+							"      \"writer_id\": \"28\",//Robert S Smith",
+							"      \"book_ISBN_nr\": \"B07Q3173Y5\"",
+							"    },",
+							"    {",
+							"      \"writer_id\": \"29\",//Red pill",
+							"      \"book_ISBN_nr\": \"B07R671BSW\"",
+							"    },",
+							"    {",
+							"      \"writer_id\": \"29\",//Red pill",
+							"      \"book_ISBN_nr\": \"B07NR8R4GZ\"",
+							"    },",
+							"    {",
+							"      \"writer_id\": \"30\",//Dave Hayes",
+							"      \"book_ISBN_nr\": \"B0849KFDRP\"",
+							"    }",
+							"  ];",
+							"  pm.environment.set(\"counter\", 0);",
+							"  pm.environment.set(\"mockDataWriterXBooks\", JSON.stringify(mockDataWriterXBooks));",
+							"}",
+							"",
+							"// Reading/parsing environment variables back to local variables",
+							"let counter = +pm.environment.get(\"counter\");",
+							"let mockDataWriterXBooks = JSON.parse(pm.environment.get(\"mockDataWriterXBooks\"));",
+							"let { writer_id, book_ISBN_nr } = mockDataWriterXBooks[counter]",
+							"// Save to environemnt for use in query",
+							"pm.environment.set('writer_id', writer_id);",
+							"pm.environment.set('book_ISBN_nr', book_ISBN_nr);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"writer_id\": \"{{writer_id}}\",\n  \"book_ISBN_nr\": \"{{book_ISBN_nr}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/booksXwriters",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"booksXwriters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test view of Dave Hayes and his book OT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d7884576-e01c-457a-bab2-3601a245cd0c",
+						"exec": [
+							"pm.test(\"Test Dave Hayes And his book\", function () {",
+							"    let jsonData = pm.response.json();",
+							"    //let element = jsonData.map(function(e) { return e.authors; }).indexOf('Dave Hayes');",
+							"    let element = jsonData.filter((e) => e.authors === 'Dave Hayes');",
+							"    console.log(element);",
+							"    //if(element = -1){",
+							"    if(element.length  === 0){ ",
+							"        pm.expect(element.authors,",
+							"        'Dave Hayes is not in the list'",
+							"        ).to.exist;      ",
+							"    }",
+							"    //else if(element !== -1){",
+							"    else if(element.length === 1){",
+							"        pm.expect(element[0].authors,",
+							"        'Wrong authors name'",
+							"        ).to.eql('Dave Hayes');",
+							"",
+							"        pm.expect(element[0].bookDescription,",
+							"        'Wrong decription of book'",
+							"        ).to.include('Are we living under a two-tiered system of justice?');",
+							"",
+							"        pm.expect(element[0].authorDescription,",
+							"        'Wrong description of author'",
+							"        ).to.eql('Dave Hayes is a teacher, public speaker, and author. He has written more than a dozen books on faith and the spiritual life under the pen name Praying Medic.');",
+							"",
+							"        pm.expect(element[0].amountOfPages,",
+							"        'Wrong amount of pages in book'",
+							"        ).to.eql(356);",
+							"",
+							"        pm.expect(element[0].bookTitle,",
+							"        'Wrong book title'",
+							"        ).to.eql('Calm before the Storm (Q Chronicles Book 1)'); ",
+							"     } ",
+							"     ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/books_and_writers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"books_and_writers"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

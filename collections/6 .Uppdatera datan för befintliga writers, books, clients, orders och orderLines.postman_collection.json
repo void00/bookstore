@@ -1,0 +1,480 @@
+{
+	"info": {
+		"_postman_id": "430a602c-7a7d-4a7d-832d-07a9a9d26488",
+		"name": "6 .Uppdatera datan för befintliga writers, books, clients, orders och orderLines",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Update writers OT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "62d80456-2c74-4e20-a277-17d7a94fabe8",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"Update Ardyth Domotor\",\n\t\"description\": \"Update The Awakening is just that! Author Peter B. Meyer makes it soberingly clear that, unless we, as responsible adults take action now, the impact on ourselves and our children, the future generation, will be irreversible and nothing short of disastrous.\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/writers/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"writers",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test updated writer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c179206b-773e-4bcb-8233-2b07dec42407",
+						"exec": [
+							"let jsonData = pm.response.json();",
+							"let element = jsonData.filter((e) => e.id === 1)[0];",
+							"",
+							"pm.test(\"Name\", function () {",
+							"    pm.expect(element.name).to.eql('Update Ardyth Domotor');",
+							"});",
+							"",
+							"pm.test(\"Description\", function () {",
+							"    pm.expect(element.description).to.eql('Update The Awakening is just that! Author Peter B. Meyer makes it soberingly clear that, unless we, as responsible adults take action now, the impact on ourselves and our children, the future generation, will be irreversible and nothing short of disastrous.');",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/writers/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"writers",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Books Jaz",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d47d5c00-05d3-4bee-ae1d-4cd0297916b8",
+						"exec": [
+							"",
+							"// The response as json",
+							"let response = pm.response.json();",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\": \"Adventures of Huckleberry Finn, The,UpdateUpdateUpdate\",\n    \"description\": \"Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/books/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"books",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test updated writer jaz (OT)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "08693d16-3348-4e8b-99d7-c8140d4fd727",
+						"exec": [
+							"let jsonData = pm.response.json();",
+							"let element = jsonData.filter((e) => e.id === 2)[0];",
+							"",
+							"pm.test(\"Title\", function () {",
+							"    pm.expect(element.title).to.eql('Adventures of Huckleberry Finn, The,UpdateUpdateUpdate');",
+							"});",
+							"",
+							"pm.test(\"Description\", function () {",
+							"    pm.expect(element.description).to.eql('Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.');",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/books/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"books",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update-orderlines (Jonas)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "08bc45c9-815a-4941-a784-b9aab58c4518",
+						"exec": [
+							"let response = pm.response.json();\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Test affectedRows\r",
+							"pm.test('Affected rows should be 1', function () {\r",
+							"    pm.expect(response.changes).to.equal(1);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\t{\r\n        \"amount\": 8\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/orderlines/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"orderlines",
+						"2"
+					]
+				},
+				"description": "Update amount for one post."
+			},
+			"response": []
+		},
+		{
+			"name": "Test update orderlines (OT)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d57a1eb9-fea5-4832-b754-3d620d691366",
+						"exec": [
+							"let jsonData = pm.response.json();\r",
+							"let element = jsonData.filter((e) => e.id === 2)[0];\r",
+							"\r",
+							"pm.test(\"Amount\", function () {\r",
+							"    pm.expect(element.amount).to.eql(8);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/orderlines/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"orderlines",
+						"2"
+					]
+				},
+				"description": "Test update orderlines"
+			},
+			"response": []
+		},
+		{
+			"name": "update-clients (Jonas)",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "0bec3bc2-f598-4ca4-8734-d3172cc529c9",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "4ca8be92-7557-410f-a83b-87139f1e3f47",
+						"exec": [
+							"// The response as json\r",
+							"let response = pm.response.json();\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Test affectedRows\r",
+							"pm.test('Affected rows should be 1', function () {\r",
+							"    pm.expect(response.changes).to.equal(1);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"aaffleck1@ask.com_update\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/clients/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"clients",
+						"1"
+					]
+				},
+				"description": "Updates the existing data in clients."
+			},
+			"response": []
+		},
+		{
+			"name": "Test update clients (OT)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "357dd515-8fd7-4a2f-9aa6-8a5944ec0c0b",
+						"exec": [
+							"let jsonData = pm.response.json();\r",
+							"let element = jsonData.filter((e) => e.id === 1)[0];\r",
+							"\r",
+							"pm.test(\"Email\", function () {\r",
+							"    pm.expect(element.email).to.eql('aaffleck1@ask.com_update');\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/clients/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"clients",
+						"1"
+					]
+				},
+				"description": "Test update clients"
+			},
+			"response": []
+		},
+		{
+			"name": "update-orders (Jonas)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "61c04460-048d-4b30-b0ce-5cb62a624395",
+						"exec": [
+							"let response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"// Test affectedRows\r",
+							"pm.test('Affected rows should be 1', function () {\r",
+							"    pm.expect(response.changes).to.equal(1);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\n\n{\n\"client_email\": \"aaffleck1@ask.com_update\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/orders/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"orders",
+						"2"
+					]
+				},
+				"description": "Update order for an instance"
+			},
+			"response": []
+		},
+		{
+			"name": "Test update orders (OT)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ef94540b-474d-4733-8f10-1898230a317e",
+						"exec": [
+							"let jsonData = pm.response.json();\r",
+							"let element = jsonData.filter((e) => e.id === 2)[0];\r",
+							"pm.test(\"Client_email\", function () {\r",
+							"    pm.expect(element.client_email).to.eql('aaffleck1@ask.com_update');\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/orders/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"orders",
+						"2"
+					]
+				},
+				"description": "Test update orders"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

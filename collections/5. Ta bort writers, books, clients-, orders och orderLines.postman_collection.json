@@ -1,0 +1,835 @@
+{
+	"info": {
+		"_postman_id": "d95e8571-8d0b-47c3-99f6-5acb6d7b85c6",
+		"name": "5. Ta bort writers, books, clients*, orders och orderLines",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add client \"tideback@gmail.com\" JZ OT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "83b025c8-7e8a-4e2e-b39c-7f1cdd26331a",
+						"exec": [
+							"let response = pm.response.json();",
+							"let clientId = response.lastID;",
+							"pm.environment.set('clientId', clientId);",
+							"pm.environment.set('email', \"tideback@gmail.com\");//No use",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);",
+							"});",
+							"// Test affectedRows",
+							"pm.test('Affected rows should be 1', function(){",
+							"    pm.expect(response.changes).to.equal(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\":\"tideback@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/clients/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"clients",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add writer \"BhanuPrasad\" OT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "38265b35-69be-4e1e-ad8b-de5c1d08587b",
+						"exec": [
+							"let response = pm.response.json();",
+							"let writerId = response.lastID;",
+							"pm.environment.set('writerId', JSON.stringify(writerId));",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);",
+							"});",
+							"// Test affectedRows",
+							"pm.test('Affected rows should be 1', function(){",
+							"    pm.expect(response.changes).to.equal(1);",
+							"    //postman.setNextRequest('Del-writer-JZ-OT');",
+							"});",
+							"console.log(writerId);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"BhanuPrasad Reddy D and BhanuPrasad D\",\n    \"description\": \"I bought this book because I want to learn Postman. Well, there are only 3 pages in the whole book on postman. 50% of the book describe the different web services SOAP, REST etc. but you can get just as much from Wikipedia\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/writers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"writers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add book \"Web Services Testing with Postman\" OT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "10b344af-842f-4981-80df-aa7307eff49d",
+						"exec": [
+							"let response = pm.response.json();",
+							"let bookId = response.lastID;",
+							"pm.environment.set('bookId', JSON.stringify(bookId));",
+							"pm.environment.set('ISBN', \"B07MB6HB5Z\");",
+							"",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);",
+							"});",
+							"// Test affectedRows",
+							"pm.test('Affected rows should be 1', function(){",
+							"    pm.expect(response.changes).to.equal(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"ISBN_nr\": \"B07MB6HB5Z\",\n  \"title\": \"Web Services Testing with Postman and Rest Assured: With Examples\",\n  \"description\": \"This Book contains Web Services with postman and basics of Rest assured.This Book is useful for those wants to start their career with web services testing .The main contents of this book is -Basics of soap services and rest services -basic methods get,post,put,delete -how to test with postman -how to do basic automation with rest assured.\",\n  \"pages\": 51,\n  \"price\": 53\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/books/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"books",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add writer to book \"Web Service Testing with Postman\" OT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "66a447bc-a993-4ee0-811c-489d5a5e486c",
+						"exec": [
+							"let response = pm.response.json();",
+							"let booksXwritersId = response.lastID;",
+							"pm.environment.set('booksXwritersId', JSON.stringify(booksXwritersId));",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);",
+							"});",
+							"// Test affectedRows",
+							"pm.test('Affected rows should be 1', function(){",
+							"    pm.expect(response.changes).to.equal(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "c53211d0-0708-4784-8a7a-30afa75dc476",
+						"exec": [
+							"let writerId = pm.environment.get('writerId');",
+							"let ISBN = pm.environment.get('ISBN');"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"writer_id\": \"{{writerId}}\",\n    \"book_ISBN_nr\": \"{{ISBN}}\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/booksXwriters",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"booksXwriters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add order JZ OT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0d85e4d7-abf6-438a-873c-b6414c9676cf",
+						"exec": [
+							"let response = pm.response.json();",
+							"let orderId = response.lastID;",
+							"pm.environment.set('orderId', JSON.stringify(orderId));",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);",
+							"});",
+							"// Test affectedRows",
+							"pm.test('Affected rows should be 1', function(){",
+							"    pm.expect(response.changes).to.equal(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5bb496d1-8ee7-4b1a-953b-48a353ad8344",
+						"exec": [
+							"let email = pm.environment.get(\"email\");",
+							"console.log(email);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"client_email\":\"{{email}}\",\r\n  \"date\":\"1974-12-19 15:47:19\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/orders/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"orders",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add book to orderline  JZ OT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5ccadd69-9018-4715-b793-3112b2349d49",
+						"exec": [
+							"let response = pm.response.json();",
+							"let orderLineId = response.lastID;",
+							"pm.environment.set('orderLineId', JSON.stringify(orderLineId));",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);",
+							"});",
+							"// Test affectedRows",
+							"pm.test('Affected rows should be 1', function(){",
+							"    pm.expect(response.changes).to.equal(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "91930ff4-c845-4df0-ac67-42db57a23141",
+						"exec": [
+							"let ISBN = pm.environment.get('ISBN');"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"book_ISBN_nr\":\"{{ISBN}}\",\n    \"amount\": \"1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/orderlines/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"orderlines",
+						""
+					]
+				},
+				"description": "ISBN"
+			},
+			"response": []
+		},
+		{
+			"name": "Add orderlines to order  JZ OT",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5498becb-7a9d-4572-b5f2-ea4e360eeb7a",
+						"exec": [
+							"let orderLineId = pm.environment.get('orderLineId');",
+							"let orderId = pm.environment.get('orderId');"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "e1cd1ec2-5e8f-4011-a64b-492ddfe82b37",
+						"exec": [
+							"let response = pm.response.json();",
+							"let orderXLineId = response.lastID;",
+							"pm.environment.set('orderXLineId', JSON.stringify(orderXLineId));",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);",
+							"});",
+							"// Test affectedRows",
+							"pm.test('Affected rows should be 1', function(){",
+							"    pm.expect(response.changes).to.equal(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n\t\"order_line_id\":\"{{orderLineId}}\",\n\t\"order_id\":\"{{orderId}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/orderlinesXorders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"orderlinesXorders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test view amount_of_books_sold_per_month OT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ad4ff6f6-5fc1-4796-af7c-795142479343",
+						"exec": [
+							"pm.test(\"Test AmountOfBooksSold 1974-12\", function () {",
+							"    let jsonData = pm.response.json();",
+							"    //let element = jsonData.map(function(e) { return e.authors; }).indexOf('1974-12');",
+							"    let element = jsonData.filter((e) => e.year_month === '1974-12');",
+							"    if(element === 0){  ",
+							"        pm.expect(element.year_month,",
+							"        'No sales made 1974-12 to tideback@gmail.com'",
+							"        ).to.exist;",
+							"    }",
+							"    else if(element === 1)",
+							"    { ",
+							"        pm.expect(element[0].year_month,",
+							"        'Wrong year or month '",
+							"        ).to.eql('1974-12');",
+							"",
+							"        pm.expect(element[0].AmountOfBooksSold,",
+							"        'Wrong amount of books sold '",
+							"        ).to.eql(1);",
+							"",
+							"        pm.expect(element[0].AmountOfMoneyEarnedPerMonthWithoutTaxes,",
+							"        'Wrong amount of money earned'",
+							"        ).to.eql(53);",
+							"    }   ",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/amount_of_books_sold_per_month",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"amount_of_books_sold_per_month"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test view total_amount_paid_per_client OT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f6e76102-6cac-4063-94f6-7966a382a451",
+						"exec": [
+							"pm.test(\"Test total_amount_paid_per_client tideback@gmail.com\", function () {",
+							"    let jsonData = pm.response.json();",
+							"    //let element = jsonData.map(function(e) { return e.authors; }).indexOf('Dave Hayes');",
+							"    let element = jsonData.filter((e) => e.email === 'tideback@gmail.com');",
+							"    if (element === 0) {",
+							"        pm.expect(element.email,",
+							"        'No amount paid by tideback@gmail.com'",
+							"        ).to.exist;",
+							"    }",
+							"    else if (element === 1) {",
+							"        pm.expect(element[0].email,",
+							"            'Wrong e-mail '",
+							"        ).to.eql('tideback@gmail.com');//Stupid",
+							"",
+							"        pm.expect(element[0].totalAmountPaidPerClientWithTaxes,",
+							"            'Wrong amount of money with tax paid by client'",
+							"        ).to.eql(56.18);",
+							"",
+							"        pm.expect(element[0].totalAmountPaidPerClient,",
+							"            'Wrong amount of money paid by client'",
+							"        ).to.eql(53);",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/total_amount_paid_per_client",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"total_amount_paid_per_client"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test view total_price_per_order OT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8fc79f4f-5798-4757-965d-6fad4448f5c2",
+						"exec": [
+							"pm.test(\"Test total_price_per_order tideback@gmail.com\", function () {",
+							"    let jsonData = pm.response.json();",
+							"    //let element = jsonData.map(function(e) { return e.client_email; }).indexOf('tideback@gmail.com'');",
+							"    let element = jsonData.filter((e) => e.client_email === 'tideback@gmail.com');",
+							"    console.log(element);",
+							"    if(element === 0){ ",
+							"        pm.expect(element.client_email,",
+							"        'No price per order by tideback@gmail.com'",
+							"        ).to.exist;",
+							"    }",
+							"    else if(element === 1){ ",
+							"        pm.expect(element[0].client_email,",
+							"        'Wrong e-mail in order'",
+							"        ).to.eql('tideback@gmail.com');",
+							"",
+							"        pm.expect(element[0].totalPriceWithTaxes,",
+							"        'Wrong price with tax in order'",
+							"        ).to.eql(56.18);",
+							"",
+							"        pm.expect(element[0].totalPrice,",
+							"        'Wrong amount of money in order'",
+							"        ).to.eql(53);",
+							"    }   ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/total_price_per_order/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"total_price_per_order",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Del client OT",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "f2900256-a75f-4c18-8803-76ee771e5ab5",
+						"exec": [
+							"let clientId = pm.environment.get(\"clientId\");",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "19716cb8-0b87-467c-9dd2-e5575c6fd742",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/clients/{{clientId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"clients",
+						"{{clientId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Del orderLine OT",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "57af9f7c-cbaf-4f4a-8382-79563343d0a2",
+						"exec": [
+							"let orderLineId = pm.environment.get(\"orderLineId\");",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "9827398a-6afe-40ea-afd4-a87c0869fa70",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/orderlines/{{orderLineId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"orderlines",
+						"{{orderLineId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Del order JZ OT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "18aab4cc-5474-4fd6-9a71-542676d2082a",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "90e98b37-9461-44b4-ba43-2eebabd5d0ce",
+						"exec": [
+							"let orderId = pm.environment.get(\"orderId\");",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/orders/{{orderId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"orders",
+						"{{orderId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Del book  JZ OT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2ed75cd7-4a91-470d-9a6e-49940978d474",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ea1dd89e-d104-490a-9e15-fb6b3c1074a7",
+						"exec": [
+							"let bookId = pm.environment.get(\"bookId\");",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/books/{{bookId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"books",
+						"{{bookId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Del writer JZ OT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ae690885-c9b9-477c-a970-5c2b07a40705",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "a232d7ae-db2c-48b6-82b4-3ad16047bac9",
+						"exec": [
+							"let writerId = pm.environment.get(\"writerId\");",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/writers/{{writerId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"writers",
+						"{{writerId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

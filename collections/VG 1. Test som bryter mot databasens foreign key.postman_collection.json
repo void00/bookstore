@@ -1,0 +1,283 @@
+{
+	"info": {
+		"_postman_id": "bc421dc3-ea45-425b-9a7d-eac4928e0b45",
+		"name": "VG 1. Test som bryter mot databasens foreign key",
+		"description": "Lägga till writers",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add book \"Nalle Puh\" OT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ceb2a3a5-dd4e-462f-b72f-2717ff8cde83",
+						"exec": [
+							"let response = pm.response.json();",
+							"let bookId = response.lastID;",
+							"pm.environment.set('bookId', JSON.stringify(bookId));",
+							"pm.environment.set('ISBN', \"B07M22HB5Z\");",
+							"",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);",
+							"});",
+							"// Test affectedRows",
+							"pm.test('Affected rows should be 1', function(){",
+							"    pm.expect(response.changes).to.equal(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"ISBN_nr\": \"B07M22HB5Z\",\n  \"title\": \"NALLE PUH\",\n  \"description\": \"This Book contains Web Services with postman and basics of Rest assured.This Book is useful for those wants to start their career with web services testing .The main contents of this book is -Basics of soap services and rest services -basic methods get,post,put,delete -how to test with postman -how to do basic automation with rest assured.\",\n  \"pages\": 52,\n  \"price\": 54\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/books/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"books",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add writer \"Ior\" OT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "760808e9-e55f-4af9-8360-26924cb4ad05",
+						"exec": [
+							"let response = pm.response.json();\r",
+							"let lastID = response.lastID;\r",
+							"\r",
+							"pm.environment.set('writerId', JSON.stringify(lastID));\r",
+							"pm.environment.set('name', 'Ior');\r",
+							"pm.environment.set('description','Donkey');\r",
+							"\r",
+							"pm.test('Affected rows should be 1', function(){\r",
+							"    pm.expect(response.changes).to.equal(1);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"    \r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Ior\",\r\n    \"description\": \"Donkey\"\r\n\t\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/writers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"writers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add writer to book \"Nalle Puh\" OT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fa46b07c-6227-45e0-be20-6a3442743afc",
+						"exec": [
+							"let response = pm.response.json();",
+							"let booksXwritersId = response.lastID;",
+							"pm.environment.set('booksXwritersId', JSON.stringify(booksXwritersId));",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);",
+							"});",
+							"// Test affectedRows",
+							"pm.test('Affected rows should be 1', function(){",
+							"    pm.expect(response.changes).to.equal(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"writer_id\": \"{{writerId}}\",\n    \"book_ISBN_nr\": \"{{ISBN}}\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/booksXwriters",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"booksXwriters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete writerJZ",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "38d2c9c9-fc65-412e-807b-e01c37491fda",
+						"exec": [
+							"let writerId = pm.environment.get(\"writerId\");\r",
+							"console.log(writerId);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "aac77f45-7e0c-4191-bc4f-b3c1b8c5e2a1",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.not.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/writers/{{writerId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"writers",
+						"{{writerId}}"
+					]
+				},
+				"description": "Negative testing "
+			},
+			"response": []
+		},
+		{
+			"name": "Get writer Ior JZ",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d96e5986-5962-4639-8239-8b9721783dff",
+						"exec": [
+							"pm.test(\"Writer is gone\", function () {\r",
+							"    let response = pm.response.json();\r",
+							"    let element = response.filter((e) => e.name === \"Ior\")[0];\r",
+							"    if(!element){ \r",
+							"        pm.expect(element,\r",
+							"        'This writer is gone but we still have a book by this writer'\r",
+							"        ).to.exist;     \r",
+							"    }\r",
+							"    else if(element)\r",
+							"    { \r",
+							"         pm.expect(element.name,\r",
+							"        'This writer does still exist'\r",
+							"        ).to.eql('Ior') \r",
+							"    }   \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/writers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"writers"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
